@@ -1,0 +1,105 @@
+version: '3.8'
+services:
+  web1:
+    hostname: web1
+    image: python-docker:latest
+    ports:
+      - 5000:5000
+    volumes: 
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  web2:
+    hostname: web2
+    image: python-docker:latest
+    ports:
+      - 5001:5000
+    volumes: 
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  web3:
+    hostname: web3
+    image: python-docker:latest
+    ports:
+      - 5002:5000
+    volumes: 
+      - ./:/app
+    depends_on:
+      - db   
+    networks:
+      - mynet
+
+  web4:
+    hostname: web4
+    image: python-docker:latest
+    ports:
+      - 5003:5000
+    volumes: 
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - mynet
+
+  db:
+    image: postgres:latest
+    container_name: testdb
+    restart: always
+    environment:
+      POSTGRES_USER: testdb
+      POSTGRES_PASSWORD: testdb
+      POSTGRES_DB: testdb
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - mynet
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - mynet
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      # - ./test.aiguided.com.crt:/etc/nginx/certs/test.aiguided.com.crt
+      # - ./test.aiguided.com.key:/etc/nginx/certs/test.aiguided.com.key
+    ports:
+      - 80:80
+      # - 433:433
+    depends_on:
+      - web1
+      - web2
+      - web3
+      - web4
+    networks:
+      - mynet
+
+  new-proxy:
+    image: nginx:latest
+    container_name: newproxy
+    volumes:
+      - ./new-nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - nginx
+    networks:
+      - mynet
+  
+networks:
+  mynet:
