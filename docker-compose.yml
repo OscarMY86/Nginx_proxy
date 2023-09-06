@@ -78,8 +78,8 @@ services:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      # - ./test.aiguided.com.crt:/etc/nginx/certs/test.aiguided.com.crt
-      # - ./test.aiguided.com.key:/etc/nginx/certs/test.aiguided.com.key
+      # - ./test.crt:/etc/nginx/certs/test.crt
+      # - ./test.key:/etc/nginx/certs/test.key
     ports:
       - 80:80
       # - 433:433
